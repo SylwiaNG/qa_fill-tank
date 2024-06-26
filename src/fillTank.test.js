@@ -13,8 +13,8 @@ describe('fillTank', () => {
     };
 
     fillTank(customer, 50, 11.9);
-    expect(customer.vehicle.fuelRemains).toBeCloseTo(36, 1); // zmienione na 36
-    expect(customer.money).toBeCloseTo(400 - 8 * 50, 2); // zmienione na 8
+    expect(customer.vehicle.fuelRemains).toBeCloseTo(36, 1);
+    expect(customer.money).toBeCloseTo(400 - 8 * 50, 2);
   });
 
   it('should round price to nearest hundredth', () => {
@@ -71,5 +71,33 @@ describe('fillTank', () => {
     fillTank(customer, 50, 1);
     expect(customer.vehicle.fuelRemains).toBe(10);
     expect(customer.money).toBe(100);
+  });
+
+  it('should not pour if customer has no money', () => {
+    const customer = {
+      money: 0,
+      vehicle: {
+        maxTankCapacity: 40,
+        fuelRemains: 10,
+      },
+    };
+
+    fillTank(customer, 50, 5);
+    expect(customer.vehicle.fuelRemains).toBe(10);
+    expect(customer.money).toBe(0);
+  });
+
+  it('should not pour if funds are insufficient', () => {
+    const customer = {
+      money: 25,
+      vehicle: {
+        maxTankCapacity: 40,
+        fuelRemains: 10,
+      },
+    };
+
+    fillTank(customer, 50, 5);
+    expect(customer.vehicle.fuelRemains).toBe(10);
+    expect(customer.money).toBe(25);
   });
 });
